@@ -63,25 +63,25 @@ const ProfileModal = ({ show, onHide }) => {
   // Function to handle saving changes
   const handleSave = async () => {
     try {
-        const response = await fetch('localhost:5000/api/profile/update', {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(updatedProfile)
-        });
-        const data = await response.json();
-        if (data.success) {
-            setIsEditing(false);
-            // Optionally, update the global state/context with the new profile data
-            Notify("Profile updated successfully", "success");
-        } else {
-            Notify(data.error, "warn");
-        }
+      const response = await fetch(`http://localhost:5000/api/profile/${auth.id}`, { // Use the user's ID in the URL
+          method: 'PUT',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(updatedProfile)
+      });
+      const data = await response.json();
+      if (data.success) {
+          setIsEditing(false);
+          // Optionally, update the global state/context with the new profile data
+          Notify("Profile updated successfully", "success");
+      } else {
+          Notify(data.error, "warn");
+      }
     } catch (error) {
-        Notify("Internal server error", "error");
+      Notify("Internal server error", "error");
     }
-};
+  };
 
   return (
     <Modal

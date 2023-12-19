@@ -183,4 +183,24 @@ const sendAuth = (user, statusCode, res) => {
   });
 };
 
-module.exports = { register, login, forgotPassword, resetPassword };
+const updateUserProfile = async (req, res, next) => {
+  try {
+    const userId = req.params.id; // Get the user ID from the request params
+    const { name, email, role, youtubeVideoId, profilePic } = req.body;
+
+    // Check if the request is from the user or an admin
+    if (req.user.id !== userId && req.user.role !== 'Admin') {
+      return next(new ErrorResponse("Unauthorized to update this profile", 401));
+    }
+
+    const user = await User.findByIdAndUpdate(userId, { name, email, role, youtubeVideoId, profilePic }, { new: true });
+    res.status(200).json({
+      success: true,
+      data: user
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+module.exports = { register, login, forgotPassword, resetPassword, updateUserProfile };
