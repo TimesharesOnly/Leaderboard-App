@@ -12,11 +12,18 @@ const AuthProvider = ({ children }) => {
       : null
   );
 
+  const updateUserProfile = (updatedProfile) => {
+    if (auth && auth._id === updatedProfile._id) {
+      setAuth({ ...auth, ...updatedProfile });
+    }
+  };
+  
   return (
     <AuthContext.Provider
       value={{
         auth,
         setAuth,
+        updateUserProfile,
       }}
     >
       {children}

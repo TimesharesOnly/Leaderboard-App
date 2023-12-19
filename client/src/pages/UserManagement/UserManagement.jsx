@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { AuthState } from '../../context/AuthProvider';
 import './UserManagement.css'; // Ensure your CSS file is set up
 import UserEditModal from '../../components/UserManagement/UserEditModal';
+import UserCreateModal from '../../components/UserManagement/UserCreateModal';
+import { Notify } from "../../utils";
 
 const UserManagement = () => {
   const [users, setUsers] = useState([]);
@@ -59,16 +61,18 @@ const UserManagement = () => {
       });
       const data = await response.json();
       if (data.success) {
-        // Update the users state with the edited user details
+        Notify("Profile updated successfully", "success");
         const updatedUsers = users.map(user => user._id === editedUser._id ? { ...user, ...editedUser } : user);
         setUsers(updatedUsers);
         setEditModalShow(false);
         // Notify the user of the successful update
       } else {
-        // Notify the user of the failure
+        Notify(data.error, "warn");
+        
       }
     } catch (error) {
-      // Handle error
+      Notify("Internal server error", "error");
+      
     }
   };
 
@@ -104,6 +108,7 @@ const UserManagement = () => {
               <td>{user.role}</td>
               <td>
                 <button onClick={() => handleEdit(user._id)}>Edit</button>
+                
               </td>
             </tr>
           ))}
