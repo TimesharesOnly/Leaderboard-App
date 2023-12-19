@@ -32,4 +32,12 @@ const protect = async (req, res, next) => {
   }
 };
 
+exports.isAdmin = (req, res, next) => {
+  if (req.user && req.user.role === 'Admin') {
+    next();
+  } else {
+    return next(new ErrorResponse('Not authorized as admin', 403));
+  }
+};
+
 module.exports = { protect };

@@ -13,6 +13,7 @@ const app = express();
 const server = http.createServer(app);
 
 
+
 // Configuring CORS for Socket.io
 const io = socketIo(server, {
   cors: {
@@ -38,7 +39,7 @@ app.set('io', io); // Make io available in request object
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/private", require("./routes/private"));
 app.use("/api/salesforce-webhook", require("./routes/salesforceWebhook"));
-
+app.use("/api/user-management", require("./routes/userManagementRoutes"));
 
 
 // --------------------------DEPLOYMENT------------------------------

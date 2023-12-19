@@ -1,0 +1,38 @@
+.user-management-container {
+    margin: 20px;
+  }
+  
+  .user-management-container input {
+    margin-bottom: 20px;
+    padding: 10px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  table, th, td {
+    border: 1px solid #ddd;
+  }
+  
+  th, td {
+    text-align: left;
+    padding: 8px;
+  }
+  
+  th {
+    background-color: #f2f2f2;
+  }
+  
+  tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  button {
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+  

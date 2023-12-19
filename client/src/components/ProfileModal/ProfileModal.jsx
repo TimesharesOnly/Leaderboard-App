@@ -63,7 +63,7 @@ const ProfileModal = ({ show, onHide }) => {
   // Function to handle saving changes
   const handleSave = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/profile/update`, { 
+      const response = await fetch(`http://localhost:5000/api/auth/profile/update`, { 
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
