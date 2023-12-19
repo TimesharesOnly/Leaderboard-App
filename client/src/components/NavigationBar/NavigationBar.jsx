@@ -67,7 +67,7 @@ const NavigationBar = () => {
 
               {/* User Management Link (Visible only to Admin users) */}
               {auth.role === 'Admin' && (
-                <Dropdown.Item as={Link} to="/user-management">
+                <Dropdown.Item as={Link} to="/usermanagement">
                   User Management
                 </Dropdown.Item>
               )}

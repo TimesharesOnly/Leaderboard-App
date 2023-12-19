@@ -2,13 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthState } from '../../context/AuthProvider';
 import './UserManagement.css'; // Ensure your CSS file is set up
+import UserEditModal from '../../components/UserManagement/UserEditModal';
 
 const UserManagement = () => {
   const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const authState = AuthState();  // Use authState to hold the entire object
   const navigate = useNavigate();
-
+  const [editModalShow, setEditModalShow] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
+  
   useEffect(() => {
     // Redirect if not admin
     if (!authState.auth || authState.auth.role !== 'Admin') {
@@ -34,14 +37,40 @@ const UserManagement = () => {
   }, [authState, navigate]);
 
   const handleEdit = (userId) => {
-    // Implement edit logic or redirect to an edit page
-    console.log('Edit user:', userId);
+    const userToEdit = users.find(user => user._id === userId);
+    setSelectedUser(userToEdit);
+    setEditModalShow(true);
   };
 
   const filteredUsers = users.filter(
     user => user.name.toLowerCase().includes(searchTerm.toLowerCase())
     || user.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const handleSave = async (editedUser) => {
+    try {
+      const response = await fetch(`/api/user-management/users/${editedUser._id}`, { 
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authState.auth.token}`
+        },
+        body: JSON.stringify(editedUser)
+      });
+      const data = await response.json();
+      if (data.success) {
+        // Update the users state with the edited user details
+        const updatedUsers = users.map(user => user._id === editedUser._id ? { ...user, ...editedUser } : user);
+        setUsers(updatedUsers);
+        setEditModalShow(false);
+        // Notify the user of the successful update
+      } else {
+        // Notify the user of the failure
+      }
+    } catch (error) {
+      // Handle error
+    }
+  };
 
   return (
     <div className="user-management-container">
@@ -50,6 +79,14 @@ const UserManagement = () => {
         placeholder="Search users..."
         onChange={(e) => setSearchTerm(e.target.value)}
       />
+  
+      <UserEditModal
+        show={editModalShow}
+        onHide={() => setEditModalShow(false)}
+        user={selectedUser}
+        onSave={handleSave}
+      />
+  
       <table>
         <thead>
           <tr>
