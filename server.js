@@ -3,6 +3,7 @@ const path = require("path");
 const dotenv = require("dotenv");
 const http = require('http');
 const socketIo = require('socket.io');
+const cors = require('cors');
 dotenv.config({ path: "./.env" });
 
 const connectDB = require("./config/db");
@@ -10,7 +11,23 @@ const errorHandler = require("./middleware/error");
 
 const app = express();
 const server = http.createServer(app);
-const io = socketIo(server);
+
+
+// Configuring CORS for Socket.io
+const io = socketIo(server, {
+  cors: {
+    origin: "http://localhost:3000", // Replace with your client's URL
+    methods: ["GET", "POST"],
+    credentials: true
+  }
+});
+
+// CORS configuration
+app.use(cors({
+  origin: 'http://localhost:3000', // Replace with your client app's URL
+  credentials: true // Allow cookies/session to be sent between client and server
+}));
+
 
 app.use(express.json());
 connectDB(); // Connect to database
@@ -21,6 +38,8 @@ app.set('io', io); // Make io available in request object
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/private", require("./routes/private"));
 app.use("/api/salesforce-webhook", require("./routes/salesforceWebhook"));
+
+
 
 // --------------------------DEPLOYMENT------------------------------
 
