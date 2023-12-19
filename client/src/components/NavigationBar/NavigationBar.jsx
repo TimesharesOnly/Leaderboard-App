@@ -38,7 +38,7 @@ const NavigationBar = () => {
             height="30"
             className="d-inline-block align-top"
           />
-          &nbsp;Advanced Node Authentication
+          &nbsp;Nesoi Leaderboard
         </Navbar.Brand>
 
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />

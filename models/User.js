@@ -33,10 +33,17 @@ const UserSchema = new mongoose.Schema(
       default:
         "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg", // Default profile pic
     },
+    youtubeVideoId: {
+      type: String,
+      default: '' // Default can be an empty string or a default video ID
+    },
+    
     resetPasswordToken: String, // String is shorthand for {type: String}
     resetPasswordExpire: Date,
   },
   { timestamps: true }
+
+    
 );
 
 // Middleware before saving a document

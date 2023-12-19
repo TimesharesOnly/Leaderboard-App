@@ -1,7 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-
-import "react-toastify/dist/ReactToastify.min.css"; // CSS for "react-toastify"
+import "react-toastify/dist/ReactToastify.min.css";
 
 // Private route
 import { PrivateRoutes } from "./utils";
@@ -15,6 +14,9 @@ import {
   PasswordResetPage,
 } from "./pages";
 import { NavigationBar } from "./components";
+
+// Newly added import for CelebrationDisplay
+import CelebrationDisplay from './components/Leaderboard/CelebrationDisplay'; // Ensure this path matches the location of the new component
 
 const App = () => {
   return (
@@ -35,12 +37,14 @@ const App = () => {
           element={<PasswordResetPage />}
         />
 
-        {/* If the user enters an invalid path in the URL it automatically redirects them to the homepage */}
+        {/* If the user enters an invalid path in the URL, it automatically redirects them to the homepage */}
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
 
-      {/* Remember to render the ToastContainer once in your application tree. Rendering it in the application root would be the best bet */}
       <ToastContainer />
+
+      {/* CelebrationDisplay component */}
+      <CelebrationDisplay />
     </>
   );
 };

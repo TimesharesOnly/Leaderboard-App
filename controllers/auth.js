@@ -9,7 +9,7 @@ const sendEmail = require("../utils/sendEmail");
 // @access          Public
 const register = async (req, res, next) => {
   try {
-    const { name, email, password, role, profilePic } = req.body;
+    const { name, email, password, role, youtubeVideoId, profilePic } = req.body;
     // Check if any of them is undefined
     if (!name || !email || !password) {
       return next(
@@ -33,6 +33,7 @@ const register = async (req, res, next) => {
             email,
             password,
             role,
+            youtubeVideoId
           }
         : {
             name,
@@ -40,6 +41,7 @@ const register = async (req, res, next) => {
             password,
             role,
             profilePic,
+            youtubeVideoId
           }
     );
 

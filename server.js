@@ -1,18 +1,26 @@
 const express = require("express");
 const path = require("path");
 const dotenv = require("dotenv");
+const http = require('http');
+const socketIo = require('socket.io');
 dotenv.config({ path: "./.env" });
 
 const connectDB = require("./config/db");
 const errorHandler = require("./middleware/error");
 
 const app = express();
+const server = http.createServer(app);
+const io = socketIo(server);
+
 app.use(express.json());
 connectDB(); // Connect to database
+
+app.set('io', io); // Make io available in request object
 
 // API Routes
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/private", require("./routes/private"));
+app.use("/api/salesforce-webhook", require("./routes/salesforceWebhook"));
 
 // --------------------------DEPLOYMENT------------------------------
 
@@ -37,7 +45,7 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 
-const server = app.listen(PORT, () =>
+server.listen(PORT, () =>
   console.log(`Server running on PORT ${PORT}`)
 );
 

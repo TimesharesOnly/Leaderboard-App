@@ -16,6 +16,7 @@ const ProfileModal = ({ show, onHide }) => {
     email: auth.email,
     profilePic: auth.profilePic,
     role: auth.role,
+    youtubeVideoId: auth.youtubeVideoId || '',
   });
 
   // Function to toggle editing mode
@@ -62,7 +63,7 @@ const ProfileModal = ({ show, onHide }) => {
   // Function to handle saving changes
   const handleSave = async () => {
     try {
-        const response = await fetch('/api/profile/update', {
+        const response = await fetch('localhost:5000/api/profile/update', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -121,11 +122,19 @@ const ProfileModal = ({ show, onHide }) => {
               onChange={handleInputChange}
             />
             <input type="file" onChange={handleImageUpload} />
-          </div>
+            <input
+            type="text"
+            name="youtubeVideoId"
+            placeholder="YouTube Video ID"
+            defaultValue={updatedProfile.youtubeVideoId}
+            onChange={handleInputChange}
+          />
+      </div>
         ) : (
           <div>
             <h4 className="text-center mt-3">{updatedProfile.name}</h4>
             <h4 className="text-center">Email: {updatedProfile.email}</h4>
+            <h4 className="text-center">YouTube Video ID: {updatedProfile.youtubeVideoId}</h4>
           </div>
         )}
       </Modal.Body>
