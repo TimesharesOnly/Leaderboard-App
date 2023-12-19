@@ -12,6 +12,7 @@ import {
   RegisterPage,
   ForgotPasswordPage,
   PasswordResetPage,
+  UserManagement,
 } from "./pages";
 import { NavigationBar } from "./components";
 
@@ -26,6 +27,7 @@ const App = () => {
         {/* Private routes (Requires authentication token) */}
         <Route element={<PrivateRoutes />}>
           <Route path="/" element={<HomePage />} />
+          <Route path="/userManagement" element={<UserManagement />} />
         </Route>
 
         {/* Public routes */}

@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import './UserManagement.css'; // Make sure to create this CSS file
 
-const UserManagementPage = () => {
+const UserManagement = () => {
   const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const response = await axios.get('/api/user-management/users');
+      const response = await fetch('/api/user-management/users');
       setUsers(response.data.data);
     };
     fetchUsers();
@@ -57,4 +56,4 @@ const UserManagementPage = () => {
   );
 };
 
-export default UserManagementPage;
+export default UserManagement;

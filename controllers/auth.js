@@ -178,6 +178,7 @@ const sendAuth = (user, statusCode, res) => {
     email: user.email,
     role: user.role,
     profilePic: user.profilePic,
+    youtubeVideoId: user.youtubeVideoId,
     token: user.getSignedToken(),
     expires_at: new Date(Date.now() + process.env.JWT_EXPIRE * 60 * 60 * 1000),
   });

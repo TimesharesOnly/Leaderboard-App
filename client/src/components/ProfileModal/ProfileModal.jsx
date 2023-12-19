@@ -16,7 +16,7 @@ const ProfileModal = ({ show, onHide }) => {
     email: auth.email,
     profilePic: auth.profilePic,
     role: auth.role,
-    youtubeVideoId: auth.youtubeVideoId || '',
+    youtubeVideoId: auth.youtubeVideoId,
   });
 
   // Function to toggle editing mode
@@ -63,7 +63,7 @@ const ProfileModal = ({ show, onHide }) => {
   // Function to handle saving changes
   const handleSave = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/auth/profile/update`, { 
+      const response = await fetch(`/api/auth/profile/update`, { 
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
