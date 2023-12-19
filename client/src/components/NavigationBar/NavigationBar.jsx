@@ -65,6 +65,13 @@ const NavigationBar = () => {
                 onHide={() => setModalShow(false)}
               />
 
+              {/* User Management Link (Visible only to Admin users) */}
+              {auth.role === 'Admin' && (
+                <Dropdown.Item as={Link} to="/user-management">
+                  User Management
+                </Dropdown.Item>
+              )}
+
               <Dropdown.Divider />
 
               <Dropdown.Item as="button" onClick={logoutHandler}>

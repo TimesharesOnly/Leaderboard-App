@@ -1,17 +1,17 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import AuthContext from '../../context/AuthProvider';
+import { AuthState } from '../../context/AuthProvider';
 import './UserManagement.css'; // Ensure your CSS file is set up
 
 const UserManagement = () => {
   const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const { auth } = useContext(AuthContext);
+  const authState = AuthState();  // Use authState to hold the entire object
   const navigate = useNavigate();
 
   useEffect(() => {
     // Redirect if not admin
-    if (!auth || auth.role !== 'Admin') {
+    if (!authState.auth || authState.auth.role !== 'Admin') {
       navigate('/');
       return;
     }
@@ -20,7 +20,7 @@ const UserManagement = () => {
     const fetchUsers = async () => {
       try {
         const response = await fetch('/api/user-management/users', {
-          headers: { Authorization: `Bearer ${auth.token}` }
+          headers: { Authorization: `Bearer ${authState.auth.token}` }
         });
         const data = await response.json();
         setUsers(data.data);
@@ -31,7 +31,7 @@ const UserManagement = () => {
     };
 
     fetchUsers();
-  }, [auth, navigate]);
+  }, [authState, navigate]);
 
   const handleEdit = (userId) => {
     // Implement edit logic or redirect to an edit page
