@@ -63,12 +63,13 @@ const ProfileModal = ({ show, onHide }) => {
   // Function to handle saving changes
   const handleSave = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/profile/${auth.id}`, { // Use the user's ID in the URL
-          method: 'PUT',
-          headers: {
-              'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(updatedProfile)
+      const response = await fetch(`http://localhost:5000/api/profile/update`, { 
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${auth.token}` // Send token for authentication
+        },
+        body: JSON.stringify(updatedProfile)
       });
       const data = await response.json();
       if (data.success) {

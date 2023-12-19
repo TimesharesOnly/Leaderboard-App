@@ -185,13 +185,9 @@ const sendAuth = (user, statusCode, res) => {
 
 const updateUserProfile = async (req, res, next) => {
   try {
-    const userId = req.params.id; // Get the user ID from the request params
+    // Extract user ID from req.user, which is set by the 'protect' middleware
+    const userId = req.user.id;
     const { name, email, role, youtubeVideoId, profilePic } = req.body;
-
-    // Check if the request is from the user or an admin
-    if (req.user.id !== userId && req.user.role !== 'Admin') {
-      return next(new ErrorResponse("Unauthorized to update this profile", 401));
-    }
 
     const user = await User.findByIdAndUpdate(userId, { name, email, role, youtubeVideoId, profilePic }, { new: true });
     res.status(200).json({
