@@ -36,9 +36,11 @@ const HomePage = () => {
   };
 
   useEffect(() => {
-    fetchPrivateDate();
+    if (!privateMessage) {
+      fetchPrivateDate();
+    }
     // eslint-disable-next-line
-  }, []);
+  }, [privateMessage]);
 
   return <span>{privateMessage}</span>;
 };

@@ -16,8 +16,6 @@ import {
 } from "./pages";
 import { NavigationBar } from "./components";
 
-// Newly added import for CelebrationDisplay
-import CelebrationDisplay from './components/Leaderboard/CelebrationDisplay'; // Ensure this path matches the location of the new component
 
 const App = () => {
   return (
@@ -45,8 +43,7 @@ const App = () => {
 
       <ToastContainer />
 
-      {/* CelebrationDisplay component */}
-      <CelebrationDisplay />
+
     </>
   );
 };
