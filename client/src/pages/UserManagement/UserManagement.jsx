@@ -131,7 +131,7 @@ const UserManagement = () => {
             <div className="user-details">
               <h5 className="user-name">{user.name}</h5>
               <p className="user-email">{user.email}</p>
-              <p className="user-role">{user.role}</p>
+              <p className="user-role-card">{user.role}</p>
             </div>
             <button onClick={() => handleEdit(user._id)} className="edit-btn">Edit</button>
           </div>
