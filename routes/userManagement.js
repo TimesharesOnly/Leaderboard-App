@@ -1,5 +1,5 @@
 const express = require('express');
-const { getAllUsers, updateUser, createUser } = require('../controllers/userManagement');
+const { getAllUsers, updateUser, createUser, deleteUser } = require('../controllers/userManagement');
 const { protectAdmin } = require('../middleware/auth');
 
 const router = express.Router();
@@ -9,6 +9,7 @@ router.route('/users')
   .post(protectAdmin, createUser);
 
 router.route('/users/:id')
-  .put(protectAdmin, updateUser);
+  .put(protectAdmin, updateUser)
+  .delete(protectAdmin, deleteUser);
 
 module.exports = router;

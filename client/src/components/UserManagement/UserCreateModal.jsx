@@ -6,7 +6,7 @@ const UserCreateModal = ({ show, onHide, onSave }) => {
   const [newUser, setNewUser] = useState({
     name: '',
     email: '',
-	  password: generateRandomPassword(),
+	  password: '',
     role: '',
     profilePic: '',
     youtubeVideoId: '',
@@ -19,7 +19,7 @@ const UserCreateModal = ({ show, onHide, onSave }) => {
 
   // Function to regenerate password
   const regeneratePassword = () => {
-    setNewUser({ ...newUser, password: generateRandomPassword() });
+    setNewUser({ ...newUser, password : generateRandomPassword() });
   };
 
 

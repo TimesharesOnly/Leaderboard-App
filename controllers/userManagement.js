@@ -39,11 +39,12 @@ exports.createUser = async (req, res, next) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
+
     // Create the user
     const newUser = await User.create({
       name,
       email,
-      password: hashedPassword,
+      password,
       role,
       youtubeVideoId,
       profilePic
@@ -57,5 +58,23 @@ exports.createUser = async (req, res, next) => {
     next(error);
   }
 };
+
+
+// Delete a user
+exports.deleteUser = async (req, res, next) => {
+  try {
+      const user = await User.findByIdAndDelete(req.params.id);
+
+      if (!user) {
+          return next(new ErrorResponse(`User not found with id of ${req.params.id}`, 404));
+      }
+
+      res.status(200).json({ success: true, data: {} });
+  } catch (error) {
+      next(error);
+  }
+};
+
+
 
 // Additional functions like deleteUser can be added here

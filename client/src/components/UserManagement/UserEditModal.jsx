@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 
-const UserEditModal = ({ show, onHide, user, onSave }) => {
+const UserEditModal = ({ show, onHide, user, onSave, onDelete }) => {
   // Initialize a state for the edited user
   const [editedUser, setEditedUser] = useState({
     name: '',
@@ -21,6 +21,14 @@ const UserEditModal = ({ show, onHide, user, onSave }) => {
   const handleChange = (e) => {
     setEditedUser({ ...editedUser, [e.target.name]: e.target.value });
   };
+
+  const handleDelete = () => {
+    // Confirmation before deleting
+    if (window.confirm(`Are you sure you want to delete ${user.name}?`)) {
+        onDelete(user._id);
+        onHide();
+    }
+};
 
   return (
     <Modal show={show} onHide={onHide} centered>
@@ -80,10 +88,13 @@ const UserEditModal = ({ show, onHide, user, onSave }) => {
           {/* Add other fields as needed */}
         </Form>
       </Modal.Body>
-      <Modal.Footer>
-        <Button variant="secondary" onClick={onHide}>Close</Button>
-        <Button variant="primary" onClick={() => onSave(editedUser)}>Save Changes</Button>
-      </Modal.Footer>
+      <Modal.Footer className="modal-footer-container">
+                <Button variant="danger" onClick={handleDelete}>Delete User</Button>
+                <div className="modal-footer-right">
+                    <Button variant="primary" onClick={() => onSave(user)}>Save</Button>
+                    <Button variant="secondary" onClick={onHide}>Close</Button>
+                </div>
+            </Modal.Footer>
     </Modal>
   );
 };

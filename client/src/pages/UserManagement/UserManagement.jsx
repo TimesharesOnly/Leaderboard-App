@@ -101,6 +101,30 @@ const UserManagement = () => {
       user.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const handleDelete = async (userId) => {
+          try {
+            const response = await fetch(`/api/user-management/users/${userId}`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${authState.auth.token}`
+                }
+            });
+            const data = await response.json();
+            if (data.success) {
+                // Update the users state to reflect the deletion
+                const updatedUsers = users.filter(user => user._id !== userId);
+                setUsers(updatedUsers);
+                Notify("User deleted successfully", "success");
+            } else {
+                Notify(data.error, "warn");
+            }
+        } catch (error) {
+            Notify("Internal server error", "error");
+        }
+    
+};
+
   return (
     <div className="user-management-container">
       <button onClick={() => setCreateModalShow(true)} className="add-user-btn">
@@ -118,6 +142,7 @@ const UserManagement = () => {
         onHide={() => setEditModalShow(false)}
         user={selectedUser}
         onSave={handleSave}
+        onDelete={handleDelete}
       />
 
       <UserCreateModal
