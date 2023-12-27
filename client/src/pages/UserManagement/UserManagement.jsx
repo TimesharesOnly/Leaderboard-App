@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { AuthState } from '../../context/AuthProvider';
-import './UserManagement.css';
-import UserEditModal from '../../components/UserManagement/UserEditModal';
-import UserCreateModal from '../../components/UserManagement/UserCreateModal';
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { AuthState } from "../../context/AuthProvider";
+import "./UserManagement.css";
+import UserEditModal from "../../components/UserManagement/UserEditModal";
+import UserCreateModal from "../../components/UserManagement/UserCreateModal";
 import { Notify } from "../../utils";
 
 const UserManagement = () => {
   const [users, setUsers] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const authState = AuthState();
   const navigate = useNavigate();
   const [editModalShow, setEditModalShow] = useState(false);
@@ -16,20 +16,20 @@ const UserManagement = () => {
   const [createModalShow, setCreateModalShow] = useState(false);
 
   useEffect(() => {
-    if (!authState.auth || authState.auth.role !== 'Admin') {
-      navigate('/');
+    if (!authState.auth || authState.auth.role !== "Admin") {
+      navigate("/");
       return;
     }
 
     const fetchUsers = async () => {
       try {
-        const response = await fetch('/api/user-management/users', {
-          headers: { Authorization: `Bearer ${authState.auth.token}` }
+        const response = await fetch("/api/user-management/users", {
+          headers: { Authorization: `Bearer ${authState.auth.token}` },
         });
         const data = await response.json();
         setUsers(data.data);
       } catch (error) {
-        console.error('Error fetching users:', error);
+        console.error("Error fetching users:", error);
       }
     };
 
@@ -37,47 +37,50 @@ const UserManagement = () => {
   }, [authState, navigate]);
 
   const handleEdit = (userId) => {
-    const userToEdit = users.find(user => user._id === userId);
+    const userToEdit = users.find((user) => user._id === userId);
     setSelectedUser(userToEdit);
     setEditModalShow(true);
   };
 
   const handleSave = async (editedUser) => {
     try {
-      const response = await fetch(`/api/user-management/users/${editedUser._id}`, { 
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${authState.auth.token}`
-        },
-        body: JSON.stringify(editedUser)
-      });
+      const response = await fetch(
+        `/api/user-management/users/${editedUser._id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authState.auth.token}`,
+          },
+          body: JSON.stringify(editedUser),
+        }
+      );
       const data = await response.json();
       if (data.success) {
         Notify("Profile updated successfully", "success");
-        const updatedUsers = users.map(user => user._id === editedUser._id ? { ...user, ...editedUser } : user);
+        const updatedUsers = users.map((user) =>
+          user._id === editedUser._id ? { ...user, ...editedUser } : user
+        );
         setUsers(updatedUsers);
         setEditModalShow(false);
         // Notify the user of the successful update
       } else {
         Notify(data.error, "warn");
-        
       }
     } catch (error) {
       Notify("Internal server error", "error");
-      
     }
   };
 
   const handleCreate = async (newUser) => {
     try {
-      const response = await fetch('/api/user-management/users', {
-        method: 'POST',
+      const response = await fetch("/api/user-management/users", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${authState.auth.token}`
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authState.auth.token}`,
         },
-        body: JSON.stringify(newUser)
+        body: JSON.stringify(newUser),
       });
       const data = await response.json();
       if (data.success) {
@@ -93,13 +96,16 @@ const UserManagement = () => {
   };
 
   const filteredUsers = users.filter(
-    user => user.name.toLowerCase().includes(searchTerm.toLowerCase())
-    || user.email.toLowerCase().includes(searchTerm.toLowerCase())
+    (user) =>
+      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
     <div className="user-management-container">
-      <button onClick={() => setCreateModalShow(true)} className="add-user-btn">Add User</button>
+      <button onClick={() => setCreateModalShow(true)} className="add-user-btn">
+        Add User
+      </button>
       <input
         type="text"
         placeholder="Search users..."
@@ -123,17 +129,19 @@ const UserManagement = () => {
       <div className="user-list">
         {filteredUsers.map((user) => (
           <div className="user-item" key={user._id}>
-            <img 
-              src={user.profilePic || '/uploads/default-profile-pic.png'} 
+            <img
+              src={user.profilePic || "/uploads/default-profile-pic.png"}
               alt={user.name}
-              className="user-image" 
+              className="user-image"
             />
             <div className="user-details">
               <h5 className="user-name">{user.name}</h5>
               <p className="user-email">{user.email}</p>
               <p className="user-role-card">{user.role}</p>
             </div>
-            <button onClick={() => handleEdit(user._id)} className="edit-btn">Edit</button>
+            <button onClick={() => handleEdit(user._id)} className="edit-btn">
+              Edit
+            </button>
           </div>
         ))}
       </div>

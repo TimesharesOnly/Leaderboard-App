@@ -215,8 +215,6 @@ const RegisterPage = () => {
         />
       </Form.Group>
 
-
-
       <Form.Group controlId="profilePic" className="mb-3">
         <Form.Label>Upload profile picture</Form.Label>
         <Form.Control

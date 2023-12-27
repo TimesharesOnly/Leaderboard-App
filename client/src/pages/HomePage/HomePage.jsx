@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { AuthState } from "../../context/AuthProvider";
 import { Notify } from "../../utils";
 
 const HomePage = () => {
-  const [privateMessage, setPrivateMessage] = useState("");
+
 
   const navigate = useNavigate();
   const { auth } = AuthState();
@@ -21,10 +21,8 @@ const HomePage = () => {
       });
       const data = await response.json();
 
-      if (data.success) {
-        setPrivateMessage(data.data);
-        return Notify(data.data, "success");
-      } else {
+      if (data.success) {}
+       else {
         navigate("/login");
         return Notify("You are not authorized please login", "error");
       }
@@ -36,13 +34,12 @@ const HomePage = () => {
   };
 
   useEffect(() => {
-    if (!privateMessage) {
-      fetchPrivateDate();
-    }
+    fetchPrivateDate();
     // eslint-disable-next-line
-  }, [privateMessage]);
+  }, [auth]);
+  
 
-  return <span>{privateMessage}</span>;
+  return <span>This is sample homepage</span>;
 };
 
 export default HomePage;

@@ -1,7 +1,9 @@
 /* Navigation Bar Background Color */
 #nav {
-  background: #fff; /* White background */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  background: #fff;
+  /* White background */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  /* Subtle shadow for depth */
 }
 
 /* User Info */
@@ -50,4 +52,34 @@
   box-shadow: none;
 }
 
-/* Adjustments for mobile view and responsive design can be added here */
+.profile-dropdown .dropdown-toggle {
+  background-color: transparent;
+  color: transparent;
+  border: none;
+}
+
+.profile-dropdown .dropdown-menu {
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.profile-dropdown .dropdown-item {
+  color: #333;
+}
+
+.profile-dropdown .dropdown-item:hover {
+  background-color: #f8f9fa;
+  color: #007bff;
+}
+
+.profile-dropdown .dropdown-toggle:active,
+.profile-dropdown .dropdown-toggle:focus {
+  background-color: transparent;
+  color: #007bff;
+  box-shadow: none;
+}
+
+.profile-dropdown .dropdown-item:active {
+  background-color: #f8f9fa;
+  color: #007bff;
+}

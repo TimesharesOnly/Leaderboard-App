@@ -49,6 +49,7 @@ const NavigationBar = () => {
               <DropdownButton
                 align="end"
                 title={profileIcon}
+                className="profile-dropdown"
               >
                 <Dropdown.Item as="button" onClick={() => setModalShow(true)}>
                   Edit Profile
