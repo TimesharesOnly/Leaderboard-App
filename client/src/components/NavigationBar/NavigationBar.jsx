@@ -30,11 +30,11 @@ const NavigationBar = () => {
           <img
             alt="Advanced Node Authentication Logo"
             src={IMAGES.logo}
-            width="30"
-            height="30"
+            width="128"
+            height="58"
             className="d-inline-block align-top"
           />
-          &nbsp;Nesoi Leaderboard
+          
         </Navbar.Brand>
 
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
