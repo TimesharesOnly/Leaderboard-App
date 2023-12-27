@@ -1,18 +1,27 @@
 import React, { useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
+import { PasswordStrengthIndicator, generateRandomPassword} from '../../utils/PasswordFunctions';
 
 const UserCreateModal = ({ show, onHide, onSave }) => {
   const [newUser, setNewUser] = useState({
     name: '',
     email: '',
+	  password: generateRandomPassword(),
     role: '',
     profilePic: '',
     youtubeVideoId: '',
+    
   });
 
   const handleChange = (e) => {
     setNewUser({ ...newUser, [e.target.name]: e.target.value });
   };
+
+  // Function to regenerate password
+  const regeneratePassword = () => {
+    setNewUser({ ...newUser, password: generateRandomPassword() });
+  };
+
 
   return (
     <Modal show={show} onHide={onHide} centered>
@@ -40,6 +49,19 @@ const UserCreateModal = ({ show, onHide, onSave }) => {
             />
           </Form.Group>
           <Form.Group className="mb-3">
+            <Form.Label>Password</Form.Label>
+            <div className="d-flex">
+              <Form.Control
+                type="text"
+                name="password"
+                value={newUser.password}
+                onChange={handleChange}
+              />
+              <Button variant="outline-secondary" onClick={regeneratePassword}>Regenerate</Button>
+            </div>
+            <PasswordStrengthIndicator password={newUser.password} />
+          </Form.Group>
+          <Form.Group className="mb-3">
             <Form.Label>Role</Form.Label>
             <Form.Control
               as="select"
@@ -47,6 +69,7 @@ const UserCreateModal = ({ show, onHide, onSave }) => {
               value={newUser.role}
               onChange={handleChange}
             >
+              <option value="">Select Role</option>
               <option value="User">User</option>
               <option value="Admin">Admin</option>
             </Form.Control>

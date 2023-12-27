@@ -1,10 +1,14 @@
 const express = require('express');
-const { getAllUsers, updateUser } = require('../controllers/userManagement');
+const { getAllUsers, updateUser, createUser } = require('../controllers/userManagement');
 const { protectAdmin } = require('../middleware/auth');
 
 const router = express.Router();
 
-router.route('/users').get( protectAdmin, getAllUsers, createUser);
-router.route('/users/:id').put( protectAdmin, updateUser);
+router.route('/users')
+  .get(protectAdmin, getAllUsers)
+  .post(protectAdmin, createUser);
+
+router.route('/users/:id')
+  .put(protectAdmin, updateUser);
 
 module.exports = router;

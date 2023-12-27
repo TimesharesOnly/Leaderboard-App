@@ -1,5 +1,6 @@
 const User = require('../models/User');
 const ErrorResponse = require('../utils/errorResponse');
+const bcrypt = require('bcryptjs');
 
 // List all users
 exports.getAllUsers = async (req, res, next) => {
@@ -17,6 +18,41 @@ exports.updateUser = async (req, res, next) => {
     const { id } = req.params;
     const user = await User.findByIdAndUpdate(id, req.body, { new: true });
     res.status(200).json({ success: true, data: user });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+// Create a new user (by admin)
+exports.createUser = async (req, res, next) => {
+  try {
+    const { name, email, password, role, youtubeVideoId, profilePic } = req.body;
+
+    // Check if user already exists
+    const userExists = await User.findOne({ email });
+    if (userExists) {
+      return next(new ErrorResponse("User already exists", 400));
+    }
+
+    // Hash the password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    // Create the user
+    const newUser = await User.create({
+      name,
+      email,
+      password: hashedPassword,
+      role,
+      youtubeVideoId,
+      profilePic
+    });
+
+    // Exclude password in the response
+    newUser.password = undefined;
+
+    res.status(201).json({ success: true, data: newUser });
   } catch (error) {
     next(error);
   }
