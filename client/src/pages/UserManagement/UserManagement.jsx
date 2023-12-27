@@ -14,7 +14,7 @@ const UserManagement = () => {
   const [editModalShow, setEditModalShow] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [createModalShow, setCreateModalShow] = useState(false);
-  
+
   useEffect(() => {
     if (!authState.auth || authState.auth.role !== 'Admin') {
       navigate('/');
@@ -35,11 +35,6 @@ const UserManagement = () => {
 
     fetchUsers();
   }, [authState, navigate]);
-
-  const filteredUsers = users.filter(
-    user => user.name.toLowerCase().includes(searchTerm.toLowerCase())
-    || user.email.toLowerCase().includes(searchTerm.toLowerCase())
-  );
 
   const handleEdit = (userId) => {
     const userToEdit = users.find(user => user._id === userId);
@@ -97,12 +92,18 @@ const UserManagement = () => {
     }
   };
 
+  const filteredUsers = users.filter(
+    user => user.name.toLowerCase().includes(searchTerm.toLowerCase())
+    || user.email.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="user-management-container">
-      <button onClick={() => setCreateModalShow(true)}>Add User</button>
+      <button onClick={() => setCreateModalShow(true)} className="add-user-btn">Add User</button>
       <input
         type="text"
         placeholder="Search users..."
+        className="search-input"
         onChange={(e) => setSearchTerm(e.target.value)}
       />
 
@@ -119,28 +120,23 @@ const UserManagement = () => {
         onSave={handleCreate}
       />
 
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Role</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredUsers.map((user) => (
-            <tr key={user._id}>
-              <td>{user.name}</td>
-              <td>{user.email}</td>
-              <td>{user.role}</td>
-              <td>
-                <button onClick={() => handleEdit(user._id)}>Edit</button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div className="user-list">
+        {filteredUsers.map((user) => (
+          <div className="user-item" key={user._id}>
+            <img 
+              src={user.profilePic || '/uploads/default-profile-pic.png'} 
+              alt={user.name}
+              className="user-image" 
+            />
+            <div className="user-details">
+              <h5 className="user-name">{user.name}</h5>
+              <p className="user-email">{user.email}</p>
+              <p className="user-role">{user.role}</p>
+            </div>
+            <button onClick={() => handleEdit(user._id)} className="edit-btn">Edit</button>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

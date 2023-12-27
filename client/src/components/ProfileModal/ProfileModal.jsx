@@ -1,16 +1,12 @@
-import React, { useState } from 'react'; // Import useState
-import { Button, Image, Modal } from 'react-bootstrap';
+import React, { useState, useRef } from 'react';
+import { Button, Image, Modal, Form } from 'react-bootstrap';
 import { AuthState } from '../../context/AuthProvider';
 import { Notify } from "../../utils";
 
 
 const ProfileModal = ({ show, onHide }) => {
-  const { auth } = AuthState();
-
-  // New State to handle editing mode
+  const { auth, updateUserProfile } = AuthState();
   const [isEditing, setIsEditing] = useState(false);
-
-  // New State to handle updated profile information
   const [updatedProfile, setUpdatedProfile] = useState({
     name: auth.name,
     email: auth.email,
@@ -18,6 +14,7 @@ const ProfileModal = ({ show, onHide }) => {
     role: auth.role,
     youtubeVideoId: auth.youtubeVideoId,
   });
+  const fileInputRef = useRef(null);
 
   // Function to toggle editing mode
   const handleEdit = () => {
@@ -33,6 +30,11 @@ const ProfileModal = ({ show, onHide }) => {
     });
   };
 
+
+  const handleImageChangeClick = () => {
+    fileInputRef.current.click(); // Trigger the file input click
+  };
+
   // Function to handle image upload
 const handleImageUpload = async (e) => {
   const file = e.target.files[0];
@@ -46,9 +48,22 @@ const handleImageUpload = async (e) => {
     });
     const data = await response.json();
     if (response.ok) {
+      if (auth.profilePic) {
+        await fetch('/api/images/delete', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${auth.token}`
+          },
+          body: JSON.stringify({ filePath: auth.profilePic })
+        });
+        
+      }
+      
       setUpdatedProfile({
         ...updatedProfile,
-        profilePic: data.filePath, // Use the file path returned by your server
+        profilePic: data.filePath,
+         // Use the file path returned by your server
       });
     } else {
       // Handle error
@@ -74,7 +89,7 @@ const handleImageUpload = async (e) => {
       const data = await response.json();
       if (data.success) {
           setIsEditing(false);
-          // Optionally, update the global state/context with the new profile data
+          updateUserProfile(updatedProfile);
           Notify("Profile updated successfully", "success");
       } else {
           Notify(data.error, "warn");
@@ -85,67 +100,59 @@ const handleImageUpload = async (e) => {
   };
 
   return (
-    <Modal
-      show={show}
-      onHide={onHide}
-      size="md"
-      aria-labelledby="contained-modal-title-vcenter"
-      centered
-    >
+    <Modal show={show} onHide={onHide} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
       <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter">
-          Your profile
-        </Modal.Title>
+        <Modal.Title id="contained-modal-title-vcenter">Your Profile</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <div className="d-flex justify-content-center">
-          <Image
-            id="profileModal"
-            src={updatedProfile.profilePic}
-            alt="Profile image"
-            draggable="false"
-            roundedCircle
-          />
+        <div className="profile-modal-content">
+        <div className="profile-image-section text-center">
+            <Image id="profileModal" src={updatedProfile.profilePic || '/uploads/default-profile-pic.png'} alt="Profile" roundedCircle />
+            </div>
+          <div className="d-flex justify-content-center">
+          <Image /* ... */ />
+          {isEditing && (
+            <>
+              <Button onClick={handleImageChangeClick} className="mt-2">
+                Change Profile Image
+              </Button>
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleImageUpload}
+                style={{ display: 'none' }} // Hide the input field
+              />
+            </>
+          )}
         </div>
-        {/* Conditional rendering based on isEditing state */}
-        {isEditing ? (
-          <div className="text-center mt-3">
-            <input
-              type="text"
-              name="name"
-              defaultValue={updatedProfile.name}
-              onChange={handleInputChange}
-            />
-            <input
-              type="email"
-              name="email"
-              defaultValue={updatedProfile.email}
-              onChange={handleInputChange}
-            />
-            <input type="file" onChange={handleImageUpload} />
-            <input
-            type="text"
-            name="youtubeVideoId"
-            placeholder="YouTube Video ID"
-            defaultValue={updatedProfile.youtubeVideoId}
-            onChange={handleInputChange}
-          />
-      </div>
-        ) : (
-          <div>
-            <h4 className="text-center mt-3">{updatedProfile.name}</h4>
-            <h4 className="text-center">Email: {updatedProfile.email}</h4>
-            <h4 className="text-center">YouTube Video ID: {updatedProfile.youtubeVideoId}</h4>
+          <div className="profile-info-section">
+            {isEditing ? (
+              <Form>
+                <Form.Group className="mb-3">
+                  <Form.Label>Name</Form.Label>
+                  <Form.Control type="text" name="name" defaultValue={updatedProfile.name} onChange={handleInputChange} />
+                </Form.Group>
+                <Form.Group className="mb-3">
+                  <Form.Label>Email</Form.Label>
+                  <Form.Control type="email" name="email" defaultValue={updatedProfile.email} onChange={handleInputChange} />
+                </Form.Group>
+                <Form.Group className="mb-3">
+                  <Form.Label>YouTube Video ID</Form.Label>
+                  <Form.Control type="text" name="youtubeVideoId" defaultValue={updatedProfile.youtubeVideoId} onChange={handleInputChange} />
+                </Form.Group>
+              </Form>
+            ) : (
+              <div>
+                <h4>{updatedProfile.name}</h4>
+                <p>Email: {updatedProfile.email}</p>
+                <p>YouTube Video ID: {updatedProfile.youtubeVideoId}</p>
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </Modal.Body>
       <Modal.Footer>
-        {/* Conditionally render Edit/Save and Close buttons */}
-        {isEditing ? (
-          <Button onClick={handleSave}>Save</Button>
-        ) : (
-          <Button onClick={handleEdit}>Edit</Button>
-        )}
+        {isEditing ? <Button onClick={handleSave}>Save</Button> : <Button onClick={handleEdit}>Edit</Button>}
         <Button onClick={onHide}>Close</Button>
       </Modal.Footer>
     </Modal>
