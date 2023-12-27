@@ -11,6 +11,7 @@ const errorHandler = require("./middleware/error");
 
 const app = express();
 const server = http.createServer(app);
+const imageRoutes = require('./routes/image');
 
 
 
@@ -26,20 +27,29 @@ const io = socketIo(server, {
 // CORS configuration
 app.use(cors({
   origin: 'http://localhost:3000', // Replace with your client app's URL
-  credentials: true // Allow cookies/session to be sent between client and server
+  credentials: true
 }));
 
 
 app.use(express.json());
-connectDB(); // Connect to database
+connectDB(); 
 
-app.set('io', io); // Make io available in request object
+app.set('io', io);
+
+
+
+// Serve static files from uploads (for image uploads)
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 
 // API Routes
+
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/private", require("./routes/private"));
 app.use("/api/salesforce-webhook", require("./routes/salesforceWebhook"));
 app.use("/api/user-management", require("./routes/userManagement"));
+app.use("/api/images", require("./routes/image"));
+
 
 
 // --------------------------DEPLOYMENT------------------------------

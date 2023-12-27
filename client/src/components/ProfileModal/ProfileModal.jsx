@@ -33,32 +33,32 @@ const ProfileModal = ({ show, onHide }) => {
     });
   };
 
-  // Function to handle image upload (Placeholder)
-  const handleImageUpload = async (e) => {
-    const file = e.target.files[0];
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('upload_preset', `${process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET}`);
+  // Function to handle image upload
+const handleImageUpload = async (e) => {
+  const file = e.target.files[0];
+  const formData = new FormData();
+  formData.append('file', file);
 
-    try {
-        const response = await fetch(`${process.env.REACT_APP_CLOUDINARY_CLOUD_URL}`, {
-          method: 'POST',
-          body: formData
-        });
-        const data = await response.json();
-        if (data.url) {
-            setUpdatedProfile({
-                ...updatedProfile,
-                profilePic: data.url,
-            });
-        } else {
-            // Handle error from Cloudinary
-            console.error("Error uploading image:", data.error);
-        }
-    } catch (error) {
-        console.error("Error uploading image:", error);
+  try {
+    const response = await fetch('/api/images/upload', { // Your server endpoint
+      method: 'POST',
+      body: formData
+    });
+    const data = await response.json();
+    if (response.ok) {
+      setUpdatedProfile({
+        ...updatedProfile,
+        profilePic: data.filePath, // Use the file path returned by your server
+      });
+    } else {
+      // Handle error
+      console.error("Error uploading image:", data.error);
     }
+  } catch (error) {
+    console.error("Error uploading image:", error);
+  }
 };
+
 
   // Function to handle saving changes
   const handleSave = async () => {
@@ -101,7 +101,7 @@ const ProfileModal = ({ show, onHide }) => {
         <div className="d-flex justify-content-center">
           <Image
             id="profileModal"
-            src={updatedProfile.profilePic} // Use updatedProfile state
+            src={updatedProfile.profilePic}
             alt="Profile image"
             draggable="false"
             roundedCircle

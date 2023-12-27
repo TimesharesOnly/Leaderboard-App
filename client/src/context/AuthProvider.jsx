@@ -1,10 +1,9 @@
-import { useContext, useState } from "react";
-import { createContext } from "react";
+import { useContext, useState, createContext } from "react";
 
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
-  // If "auth" !== null and token is not expired, save the auth details inside "auth" state else set it to null
+  // Initial auth state
   const [auth, setAuth] = useState(
     (localStorage.getItem("auth") !== null &&
       new Date() < new Date(JSON.parse(localStorage.getItem("auth")).expires_at))
@@ -12,12 +11,15 @@ const AuthProvider = ({ children }) => {
       : null
   );
 
+  // Method to update the user profile
   const updateUserProfile = (updatedProfile) => {
     if (auth && auth._id === updatedProfile._id) {
       setAuth({ ...auth, ...updatedProfile });
+      // Update local storage as well if needed
+      localStorage.setItem("auth", JSON.stringify({ ...auth, ...updatedProfile }));
     }
   };
-  
+
   return (
     <AuthContext.Provider
       value={{
